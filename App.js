@@ -1,19 +1,95 @@
+import { Root } from "native-base";
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import { AppLoading } from 'expo';
+import { Container, Text } from 'native-base';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+import StickersPage from './src/screens/containers/StickersPage';
+import Users from './src/screens/containers/Users';
+import Login from './src/screens/containers/Login';
+import CategoriesScreen from './src/screens/containers/CategoriesScreen';
+import Layout from './src/sections/components/FooterTabsIconText';
+import HeaderCategories from './src/sections/components/HeaderCategories';
+import GiftsScreen from './src/screens/containers/GiftsScreen';
+import Gift from './src/screens/containers/Gift';
+
+class HomeScreen extends React.Component {
+  render() {
+    return (
+      <Container>
+        <Content></Content>
+        <Layout />
+      </Container>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const RootStack = createStackNavigator(
+  {
+    HomeRoute: HomeScreen,
+    ProfileRoute: Users,
+    StickersPageRoute: StickersPage,
+
+    LoginRoute: {
+      screen: Login,
+      navigationOptions: {
+        header: null
+      }
+    },
+    CategoriesRoute:{
+      screen:CategoriesScreen,
+      navigationOptions:{
+        header:<HeaderCategories />
+      }
+    },
+    GiftListRoute:{
+      screen:GiftsScreen,
+      navigationOptions:{
+        title: 'Premios'
+      }
+    },
+    GiftRoute:{
+      screen:Gift,
+      navigationOptions:{
+        title: 'El Premio'
+      }
+    },
   },
-});
+  {
+    initialRouteName:'LoginRoute'
+  }
+  
+);
+
+const AppContainer = createAppContainer(RootStack);
+
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReady: false,
+    };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      ...Ionicons.font,
+    });
+    this.setState({ isReady: true });
+  }
+
+  render() {
+    if (!this.state.isReady) {
+      return <AppLoading />;
+    }
+
+    return <Root><AppContainer /></Root> ;
+  }
+}
+
