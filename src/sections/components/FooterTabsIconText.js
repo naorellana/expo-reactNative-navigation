@@ -3,6 +3,8 @@ import {View, Footer, FooterTab, Button, Icon, Text} from 'native-base';
 
 import {withNavigation} from 'react-navigation';
 
+
+
 class FooterTabsIconText extends Component {
   render() {
     return (

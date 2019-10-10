@@ -2,9 +2,22 @@ import React, { Component } from 'react';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { Image, Dimensions } from 'react-native';
 import { Left, Button, Form, Item, Input, Thumbnail, Text, Icon, Card, CardItem, Body, Right } from 'native-base';
+import  {connect} from 'react-redux';
+import * as userAccionts from '../../actions/usersActions'
 
-export default class StickerForm extends Component {
+  
+ class StickerForm extends Component {
+	
+	componentDidMount(){
+		this.props.traerTodos();
+	}
+
 	constructor(props) {
+		const headers = {
+			'Accept': 'application/json',
+			'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+			'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk4NDVlZDI5ZDg1NWJmNDQwNjM4NDAxNjhiOGUyNDJlYmFkZDIzNzYyMzg2MWRkNjRiNTZjZGE5YWQxNDM0OTFlZjFiY2FhYmVkOTM1NDlkIn0.eyJhdWQiOiIyIiwianRpIjoiOTg0NWVkMjlkODU1YmY0NDA2Mzg0MDE2OGI4ZTI0MmViYWRkMjM3NjIzODYxZGQ2NGI1NmNkYTlhZDE0MzQ5MWVmMWJjYWFiZWQ5MzU0OWQiLCJpYXQiOjE1NzA1NjQ2NjgsIm5iZiI6MTU3MDU2NDY2OCwiZXhwIjoxNjAyMTg3MDY4LCJzdWIiOiI1NyIsInNjb3BlcyI6WyIqIl19.kiHUJozhg-KZpdzr2pXDeYAUVHLenr__gi1u9gWH6use9V56iPold1Md7ea6GGo1hiUU0qkAVR6U8RQlO5ssEC0JmP0R0yREuKvDkcCO5YaMhrgst1USiZcCwDdeoAR7XptUiVHdCXbrnfstsAXtJYkBte9aZrrL4sIYiDV5rzCQRgwFLq3y_YPRlEqGCINhAdDhjiYVb7xQlFEFKvinCV0fhnOL--GgDbNAOOhzRkpaEGBwgm_jy5piJ3NyRaEk-xc49SWBWNly4Jui60pJrzAjoj_1aPZowSZL_YJsgFNFXgRZKsZpqjPmw_F41jcqyu8bzdTC1twIEqtU2A1rTY3K3-lPrmevXk1Pc_KhcN0i7X5nNtIOlSVKfagOt5tOHg3w1Vt6bLPXGYnySBXT-djpeHaGGo0Wh5vdyfiN-n3ZIPYALCUo7ql9woVu9ze08mkszzyGEAzsVksm-HFy1FEkP7lFaIYyMzvSyGSRlpcUwSnwXpm41g7cQFYGv8sQ8reByD6bg-HlSFRytLIsnsfb10LSMba30enXAIpI0jEQlrv84X31o82g8Y3Kx967VnxgX5BqCc8XAxjvMqCgRJI2M9o9Dw0U2tvExlHTU--yismSu4BBgkE_nN8cfhzoagAi7D9G-_gmU_IjHhnlLMz-MFIbTokPuF0QYcXwD60',
+		}
 		super(props);
 		this.state = {
 			codeP1: '',
@@ -60,6 +73,44 @@ export default class StickerForm extends Component {
 			hexa: null,
 		};
 	}
+
+	consultarSticker = async () => {
+		this.setState({
+			code: this.state.codeP1 + this.state.codeP2 + this.state.codeP3 + this.state.codeP4
+		});
+		try {
+			let dataForm = '_method=' + encodeURIComponent('POST');
+			dataForm += '&code=' + encodeURIComponent(this.state.code);
+
+			const response = await fetch(`http://192.168.1.130:8000/api/stickers`, {
+				//importante revisar en api de laravel que este corectamente implementado laravel-cors y la url escrita EXACTAMENTE igual que en las rutas
+				//credentials: 'include', //pass cookies, for authentication
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+					Authorization:
+						'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk4NDVlZDI5ZDg1NWJmNDQwNjM4NDAxNjhiOGUyNDJlYmFkZDIzNzYyMzg2MWRkNjRiNTZjZGE5YWQxNDM0OTFlZjFiY2FhYmVkOTM1NDlkIn0.eyJhdWQiOiIyIiwianRpIjoiOTg0NWVkMjlkODU1YmY0NDA2Mzg0MDE2OGI4ZTI0MmViYWRkMjM3NjIzODYxZGQ2NGI1NmNkYTlhZDE0MzQ5MWVmMWJjYWFiZWQ5MzU0OWQiLCJpYXQiOjE1NzA1NjQ2NjgsIm5iZiI6MTU3MDU2NDY2OCwiZXhwIjoxNjAyMTg3MDY4LCJzdWIiOiI1NyIsInNjb3BlcyI6WyIqIl19.kiHUJozhg-KZpdzr2pXDeYAUVHLenr__gi1u9gWH6use9V56iPold1Md7ea6GGo1hiUU0qkAVR6U8RQlO5ssEC0JmP0R0yREuKvDkcCO5YaMhrgst1USiZcCwDdeoAR7XptUiVHdCXbrnfstsAXtJYkBte9aZrrL4sIYiDV5rzCQRgwFLq3y_YPRlEqGCINhAdDhjiYVb7xQlFEFKvinCV0fhnOL--GgDbNAOOhzRkpaEGBwgm_jy5piJ3NyRaEk-xc49SWBWNly4Jui60pJrzAjoj_1aPZowSZL_YJsgFNFXgRZKsZpqjPmw_F41jcqyu8bzdTC1twIEqtU2A1rTY3K3-lPrmevXk1Pc_KhcN0i7X5nNtIOlSVKfagOt5tOHg3w1Vt6bLPXGYnySBXT-djpeHaGGo0Wh5vdyfiN-n3ZIPYALCUo7ql9woVu9ze08mkszzyGEAzsVksm-HFy1FEkP7lFaIYyMzvSyGSRlpcUwSnwXpm41g7cQFYGv8sQ8reByD6bg-HlSFRytLIsnsfb10LSMba30enXAIpI0jEQlrv84X31o82g8Y3Kx967VnxgX5BqCc8XAxjvMqCgRJI2M9o9Dw0U2tvExlHTU--yismSu4BBgkE_nN8cfhzoagAi7D9G-_gmU_IjHhnlLMz-MFIbTokPuF0QYcXwD60'
+				},
+				body: dataForm
+			});
+			const data = await response.json();
+			//console.log('resp', data)
+			this.setState({
+				sticker: data.type.points,
+				color: data.type.color,
+				hexa: data.type.hexa,
+				message: data.message
+			});
+		} catch (error) {
+			this.setState({
+				message: error.toString()
+			});
+		}
+
+		
+	};
+
 
 	handleClick = async () => {
 		this.setState({
@@ -140,6 +191,7 @@ export default class StickerForm extends Component {
 		var screenWidth = Dimensions.get('window').width - 200;
 		var hg = Dimensions.get('window').width - 200;
 		var inputWidth = Dimensions.get('window').width / 8;
+		console.log(this.props)
 		return (
 			<Card>
 				<CardItem cardBody>
@@ -278,6 +330,9 @@ export default class StickerForm extends Component {
 						<Text style={{ padding: 10, fontSize: 12 }}>
 							{this.state.sticker + this.state.color + this.state.hexa}
 						</Text>
+						<Text style={{ padding: 10, fontSize: 12 }}>
+							data: {this.props.usuarios.toString()}
+						</Text>
 						<Button transparent Primary>
 							<Icon
 								type="MaterialCommunityIcons"
@@ -292,6 +347,9 @@ export default class StickerForm extends Component {
 					</Col>
 				</CardItem>
 				<CardItem>
+				<Text style={{ padding: 10, fontSize: 12 }}>
+							{this.props.usuarios.product_id }
+						</Text>
 					<Col style={{ alignItems: 'center' }}>
 						<Button
 							onPress={this.props.onClick}
@@ -316,7 +374,7 @@ export default class StickerForm extends Component {
 					</Col>
 					<Col style={{ alignItems: 'center' }}>
 						<Button
-							onPress={this.handleClick}
+							onPress={this.consultarSticker}
 							rounded
 							style={{
 								backgroundColor: '#1B2853',
@@ -341,3 +399,9 @@ export default class StickerForm extends Component {
 		);
 	}
 }
+
+const mapStateToProps = (reducers) => {
+	return reducers.usuariosReducer; /*   DE TODOS LOS REDUCERS MAPEAMOS el reducer de usuarios devolvera los suauiros en los props del componente */ 
+}
+
+export default connect(mapStateToProps, userAccionts ) (StickerForm) 
