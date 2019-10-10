@@ -11,11 +11,17 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/canjeaton.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.tenexinformatica.canjeaton"
+    },
+    "android": {
+      "package": "com.tenexinformatica.canjeaton"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
