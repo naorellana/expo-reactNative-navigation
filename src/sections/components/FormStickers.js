@@ -192,6 +192,8 @@ import * as userAccionts from '../../actions/usersActions'
 		var hg = Dimensions.get('window').width - 200;
 		var inputWidth = Dimensions.get('window').width / 8;
 		console.log(this.props)
+		console.log('cargando: ', this.props.cargando)
+		console.log('error: ', this.props.error)
 		return (
 			<Card>
 				<CardItem cardBody>
@@ -330,9 +332,6 @@ import * as userAccionts from '../../actions/usersActions'
 						<Text style={{ padding: 10, fontSize: 12 }}>
 							{this.state.sticker + this.state.color + this.state.hexa}
 						</Text>
-						<Text style={{ padding: 10, fontSize: 12 }}>
-							data: {this.props.usuarios.toString()}
-						</Text>
 						<Button transparent Primary>
 							<Icon
 								type="MaterialCommunityIcons"
@@ -347,9 +346,6 @@ import * as userAccionts from '../../actions/usersActions'
 					</Col>
 				</CardItem>
 				<CardItem>
-				<Text style={{ padding: 10, fontSize: 12 }}>
-							{this.props.usuarios.product_id }
-						</Text>
 					<Col style={{ alignItems: 'center' }}>
 						<Button
 							onPress={this.props.onClick}
