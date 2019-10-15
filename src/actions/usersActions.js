@@ -26,13 +26,14 @@ export const traerTodos = code => async dispatch => {
 			dispatch({
 				type: ERROR,
 				payload: 'Algo salió mal, ' + response.status,
-				cargando: false
+				cargando: false,
 			});
 		} else {
 			dispatch({
 				type: TRAER_TODOS,
 				payload: data.sticker,
-				cargando: false
+				cargando: false,
+				tipo: data.sticker.type,
 			});
 		}
 	} catch (error) {
@@ -40,7 +41,7 @@ export const traerTodos = code => async dispatch => {
 		dispatch({
 			type: ERROR,
 			payload: error.message,
-			cargando: false
+			cargando: false,
 		});
 	}
 };
@@ -71,13 +72,14 @@ export const canjearCupon = code => async dispatch => {
 			dispatch({
 				type: ERROR,
 				payload: 'Algo salió mal, ' + response.status,
-				cargando: false
+				cargando: false,
 			});
 		} else {
 			dispatch({
 				type: CANJE,
 				payload: data.type,
-				cargando: false
+				cargando: false,
+				success: true,
 			});
 		}
 	} catch (error) {
@@ -85,7 +87,7 @@ export const canjearCupon = code => async dispatch => {
 		dispatch({
 			type: ERROR,
 			payload: error.message,
-			cargando: false
+			cargando: false,
 		});
 	}
 };
