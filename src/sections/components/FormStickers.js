@@ -2,85 +2,28 @@ import React, { Component } from 'react';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { Image, Dimensions } from 'react-native';
 import { Left, Button, Form, Item, Input, Thumbnail, Text, Icon, Card, CardItem, Body, Right } from 'native-base';
-import  {connect} from 'react-redux';
-import * as userAccionts from '../../actions/usersActions'
+import { connect } from 'react-redux';
+import * as userAccionts from '../../actions/usersActions';
 
-  
- class StickerForm extends Component {
-	
-	componentDidMount(){
-		this.props.traerTodos();
-	}
+class StickerForm extends Component {
+	state = {
+		codeP1: '',
+		codeP2: '',
+		codeP3: '',
+		codeP4: '',
+		code: ''
+	};
 
-	constructor(props) {
-		const headers = {
-			'Accept': 'application/json',
-			'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-			'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk4NDVlZDI5ZDg1NWJmNDQwNjM4NDAxNjhiOGUyNDJlYmFkZDIzNzYyMzg2MWRkNjRiNTZjZGE5YWQxNDM0OTFlZjFiY2FhYmVkOTM1NDlkIn0.eyJhdWQiOiIyIiwianRpIjoiOTg0NWVkMjlkODU1YmY0NDA2Mzg0MDE2OGI4ZTI0MmViYWRkMjM3NjIzODYxZGQ2NGI1NmNkYTlhZDE0MzQ5MWVmMWJjYWFiZWQ5MzU0OWQiLCJpYXQiOjE1NzA1NjQ2NjgsIm5iZiI6MTU3MDU2NDY2OCwiZXhwIjoxNjAyMTg3MDY4LCJzdWIiOiI1NyIsInNjb3BlcyI6WyIqIl19.kiHUJozhg-KZpdzr2pXDeYAUVHLenr__gi1u9gWH6use9V56iPold1Md7ea6GGo1hiUU0qkAVR6U8RQlO5ssEC0JmP0R0yREuKvDkcCO5YaMhrgst1USiZcCwDdeoAR7XptUiVHdCXbrnfstsAXtJYkBte9aZrrL4sIYiDV5rzCQRgwFLq3y_YPRlEqGCINhAdDhjiYVb7xQlFEFKvinCV0fhnOL--GgDbNAOOhzRkpaEGBwgm_jy5piJ3NyRaEk-xc49SWBWNly4Jui60pJrzAjoj_1aPZowSZL_YJsgFNFXgRZKsZpqjPmw_F41jcqyu8bzdTC1twIEqtU2A1rTY3K3-lPrmevXk1Pc_KhcN0i7X5nNtIOlSVKfagOt5tOHg3w1Vt6bLPXGYnySBXT-djpeHaGGo0Wh5vdyfiN-n3ZIPYALCUo7ql9woVu9ze08mkszzyGEAzsVksm-HFy1FEkP7lFaIYyMzvSyGSRlpcUwSnwXpm41g7cQFYGv8sQ8reByD6bg-HlSFRytLIsnsfb10LSMba30enXAIpI0jEQlrv84X31o82g8Y3Kx967VnxgX5BqCc8XAxjvMqCgRJI2M9o9Dw0U2tvExlHTU--yismSu4BBgkE_nN8cfhzoagAi7D9G-_gmU_IjHhnlLMz-MFIbTokPuF0QYcXwD60',
-		}
-		super(props);
-		this.state = {
-			codeP1: '',
-			codeP2: '',
-			codeP3: '',
-			codeP4: '',
-			code: '',
-			loading: true,
-			error: null,
-			data: null,
-			/*sticker: {
-				activation_date: null,
-				assignment_id: null,
-				code: '',
-				created_at: null,
-				expiration_date: null,
-				id: null,
-				product_id: null,
-				refacturar: null,
-				sale_id: null,
-				seller_id: null,
-				serial: null,
-				status_id: null,
-				type: {
-					color: null,
-					cost: null,
-					created_at: null,
-					hexa: null,
-					id: null,
-					points: null,
-					price: null,
-					rgb: null,
-					updated_at: null,
-				},
-				type_id: null,
-				updated_at: null
-			},
-			success: null,
-			type: {
-				color: '',
-				cost: 0,
-				created_at: '',
-				hexa: '',
-				id: 0,
-				points: null,
-				price: 0,
-				rgb: '',
-				updated_at: ''
-			},*/
-			message: null,
-			sticker: null,
-			color: null,
-			hexa: null,
-		};
+	componentDidMount() {
+		//this.props.traerTodos('b3');
 	}
 
 	consultarSticker = async () => {
-		this.setState({
-			code: this.state.codeP1 + this.state.codeP2 + this.state.codeP3 + this.state.codeP4
-		});
+		let cupon = this.state.codeP1 + this.state.codeP2 + this.state.codeP3 + this.state.codeP4;
+		this.props.traerTodos(cupon);
 		try {
 			let dataForm = '_method=' + encodeURIComponent('POST');
-			dataForm += '&code=' + encodeURIComponent(this.state.code);
+			dataForm += '&code=' + encodeURIComponent(cupon);
 
 			const response = await fetch(`http://192.168.1.130:8000/api/stickers`, {
 				//importante revisar en api de laravel que este corectamente implementado laravel-cors y la url escrita EXACTAMENTE igual que en las rutas
@@ -107,10 +50,12 @@ import * as userAccionts from '../../actions/usersActions'
 				message: error.toString()
 			});
 		}
-
-		
 	};
 
+	canjeandoData = async () => {
+		let cupon = this.state.codeP1 + this.state.codeP2 + this.state.codeP3 + this.state.codeP4;
+		await this.props.canjearCupon(cupon);
+	};
 
 	handleClick = async () => {
 		this.setState({
@@ -146,11 +91,9 @@ import * as userAccionts from '../../actions/usersActions'
 				message: error.toString()
 			});
 		}
-
-		
 	};
 
-	canjeaSticker = async () => {
+	/*canjeaSticker = async () => {
 		try {
 			let dataForm = '_method=' + encodeURIComponent('PATCH');
 			dataForm += '&code=' + encodeURIComponent(this.state.code);
@@ -174,26 +117,27 @@ import * as userAccionts from '../../actions/usersActions'
 				sticker: data.sticker,
 				success: data.success,
 				type: data.type,
-				message: data.message,
-								
+				message: data.message
 			});
-			console.log('POST: ', data );
+			console.log('POST: ', data);
 		} catch (error) {
 			this.setState({
 				loading: false,
-				error: error,
+				error: error
 			});
 			console.log('error: ', error);
 		}
-	};
+	};*/
 
 	render() {
+		console.log('props: ', this.props);
 		var screenWidth = Dimensions.get('window').width - 200;
 		var hg = Dimensions.get('window').width - 200;
 		var inputWidth = Dimensions.get('window').width / 8;
-		console.log(this.props)
-		console.log('cargando: ', this.props.cargando)
-		console.log('error: ', this.props.error)
+		console.log(this.props);
+		console.log('cargando: ', this.props.cargando);
+		console.log('error: ', this.props.error);
+		console.log('all:  ', this.props);
 		return (
 			<Card>
 				<CardItem cardBody>
@@ -232,7 +176,7 @@ import * as userAccionts from '../../actions/usersActions'
 								<Item>
 									<Input
 										keyboardType="default"
-										maxLength={4}
+										maxLength={1}
 										onChangeText={codeP1 => this.setState({ codeP1 })}
 										value={this.state.codeP1}
 										style={{
@@ -254,7 +198,7 @@ import * as userAccionts from '../../actions/usersActions'
 										onChangeText={codeP2 => this.setState({ codeP2 })}
 										value={this.state.codeP2}
 										keyboardType="numeric"
-										maxLength={4}
+										maxLength={1}
 										style={{
 											textAlign: 'center',
 											fontSize: 14,
@@ -274,7 +218,7 @@ import * as userAccionts from '../../actions/usersActions'
 										onChangeText={codeP3 => this.setState({ codeP3 })}
 										value={this.state.codeP3}
 										keyboardType="numeric"
-										maxLength={4}
+										maxLength={1}
 										style={{
 											textAlign: 'center',
 											fontSize: 14,
@@ -294,7 +238,7 @@ import * as userAccionts from '../../actions/usersActions'
 										onChangeText={codeP4 => this.setState({ codeP4 })}
 										value={this.state.codeP4}
 										keyboardType="numeric"
-										maxLength={4}
+										maxLength={1}
 										style={{
 											textAlign: 'center',
 											fontSize: 14,
@@ -348,7 +292,7 @@ import * as userAccionts from '../../actions/usersActions'
 				<CardItem>
 					<Col style={{ alignItems: 'center' }}>
 						<Button
-							onPress={this.props.onClick}
+							onPress={this.canjeandoData}
 							rounded
 							style={{
 								backgroundColor: '#1B2853',
@@ -396,8 +340,8 @@ import * as userAccionts from '../../actions/usersActions'
 	}
 }
 
-const mapStateToProps = (reducers) => {
-	return reducers.usuariosReducer; /*   DE TODOS LOS REDUCERS MAPEAMOS el reducer de usuarios devolvera los suauiros en los props del componente */ 
-}
+const mapStateToProps = reducers => {
+	return reducers.usuariosReducer; /*   DE TODOS LOS REDUCERS MAPEAMOS el reducer de usuarios devolvera los suauiros en los props del componente */
+};
 
-export default connect(mapStateToProps, userAccionts ) (StickerForm) 
+export default connect(mapStateToProps, userAccionts)(StickerForm);
